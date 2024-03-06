@@ -3,7 +3,7 @@ import { locService } from "./services/loc.service.js";
 import { mapService } from "./services/map.service.js";
 
 window.onload = onInit;
-
+window.gUserPos = gUserPos;
 // To make things easier in this project structure
 // functions that are called from DOM are defined on a global app object
 window.app = {
@@ -43,18 +43,24 @@ function renderLocs(locs) {
     .map((loc) => {
         // const distance = utilService.getDistance(gUserPos,loc.geo,'k')
       const className = loc.id === selectedLocId ? "active" : "";
+
         var distance = "";
       if (gUserPos) {
-        distance = utilService.getDistance(gUserPos, loc.geo, "k");
+        distance = utilService.getDistance(
+          gUserPos,
+          { lat: loc.geo.lat, lng: loc.geo.lng },
+          "k"
+        );
       }
       console.log(distance);
       return `
         <li class="loc ${className}" data-id="${loc.id}">
             <h4>  
                 <span>${loc.name}</span>
-                <span>Distance:<span>${distance} km</span></span>
                 <span title="${loc.rate} stars">${"★".repeat(loc.rate)}</span>
             </h4>
+            <p><span class="distance">Distance:<span>${distance} km</span></span>
+            </p>
             <p class="muted">
                 Created: ${utilService.elapsedTime(loc.createdAt)}
                 ${
@@ -242,6 +248,12 @@ function displayLoc(loc) {
   const el = document.querySelector(".selected-loc");
   el.querySelector(".loc-name").innerText = loc.name;
   el.querySelector(".loc-address").innerText = loc.geo.address;
+
+  if (gUserPos) {
+    const distance = utilService.getDistance(gUserPos, loc.geo, "K");
+    el.querySelector(".loc-distance").innerText = `Distance: ${distance} km`;
+  }
+
   el.querySelector(".loc-rate").innerHTML = "★".repeat(loc.rate);
   el.querySelector("[name=loc-copier]").value = window.location;
   el.classList.add("show");

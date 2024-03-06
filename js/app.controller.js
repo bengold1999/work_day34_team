@@ -55,9 +55,10 @@ function renderLocs(locs) {
         <li class="loc ${className}" data-id="${loc.id}">
             <h4>  
                 <span>${loc.name}</span>
-                <span class="distance">Distance:<span>${distance} km</span></span>
                 <span title="${loc.rate} stars">${"★".repeat(loc.rate)}</span>
             </h4>
+            <p><span class="distance">Distance:<span>${distance} km</span></span>
+            </p>
             <p class="muted">
                 Created: ${utilService.elapsedTime(loc.createdAt)}
                 ${

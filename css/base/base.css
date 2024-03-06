@@ -1,47 +1,59 @@
 body {
-    background-color: var(--bg1);
-    color: #eee;
-    overflow-x: hidden;
+  background-color: var(--color2);
+  color: var(--color1);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
 }
 
 header {
-    background-color: var(--bg2);
-    color: aliceblue;
-    padding: 0.3em;
+  background-color: var(--color2);
+  padding: 1em;
 }
 
 header h1 {
-    margin: 0;
+  margin: 0;
 }
 
-input[type=text],input[type=number] {
-    line-height: 2em;
-    background-color: var(--color1);
-    border: 0;
+input[type="text"],
+input[type="number"] {
+  line-height: 2.3em;
+  background-color: var(--color1);
+  border: 0;
+  margin-bottom: 5px;
+  margin-right: 5px;
+  border-radius: 5px;
+  width: 500px;
 }
 
 button {
-    color: whitesmoke;
-    border: 0;
-    border-radius: .2em;
-    background-color: #222;
-    padding: 6px 10px;
-    margin: 2px;
-    cursor: pointer;
-    transition: background-color .5s;
+  color: var(--color1);
+  background-color: var(--color1);
+  padding: 0.5em 1em;
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 button:hover {
-    color: var(--color2);
-    background-color: #111;
+  background-color: var(--color2);
+  transform: translateY(-2px);
+  box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.25);
+}
+
+button:active {
+  transform: translateY(1px);
+  box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.15);
 }
 
 .muted {
-    font-size: .9em;
-    color: var(--gray1);
+  font-size: 0.9em;
+  color: var(--gray1);
 }
 
 .smaller {
-    font-size: .8em;
+  font-size: 0.8em;
 }
-

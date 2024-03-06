@@ -128,5 +128,3 @@ function getDistance(latLng1, latLng2, unit) {
     return dist;
   }
 }
-
-console.log("hello");

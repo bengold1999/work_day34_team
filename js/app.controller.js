@@ -245,8 +245,8 @@ function onSetSortBy() {
     loadAndRenderLocs()
 }
 
-function onSetFilterBy({ txt, minRate ,time }) {
-    const filterBy = locService.setFilterBy({ txt, minRate: +minRate ,time: +time })
+function onSetFilterBy({ txt, minRate ,createdAt }) {
+    const filterBy = locService.setFilterBy({ txt, minRate: +minRate ,createdAt: +createdAt })
     utilService.updateQueryParams(filterBy)
     loadAndRenderLocs()
 }

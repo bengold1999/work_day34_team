@@ -16,6 +16,7 @@ window.app = {
   onShareLoc,
   onSetSortBy,
   onSetFilterBy,
+  
 };
 
 var gUserPos = null;
@@ -37,12 +38,13 @@ function onInit() {
 
 function renderLocs(locs) {
   const selectedLocId = getLocIdFromQueryParams();
-
+    
   var strHTML = locs
     .map((loc) => {
+        // const distance = utilService.getDistance(gUserPos,loc.geo,'k')
       const className = loc.id === selectedLocId ? "active" : "";
 
-      var distance = "";
+        var distance = "";
       if (gUserPos) {
         distance = utilService.getDistance(
           gUserPos,
@@ -86,6 +88,7 @@ function renderLocs(locs) {
   elLocList.innerHTML = strHTML || "No locs to show";
 
   renderLocStats();
+  renderLocStatsUpate();
 
   if (selectedLocId) {
     const selectedLoc = locs.find((loc) => loc.id === selectedLocId);
@@ -124,15 +127,45 @@ function onSearchAddress(ev) {
     });
 }
 
-function onAddLoc(geo) {
-  const locName = prompt("Loc name", geo.address || "Just a place");
-  if (!locName) return;
+function dialog(location,address,rate=3,onSave){
+    document.querySelector('.loc-name').innerHTML = location;
+    document.querySelector('.user-place').innerHTML = address;
+    // document.querySelector('.user-place').innerHTML = address;
+    document.getElementById('locRateInput').value = rate
+    const dialogElement = document.querySelector('.dialog');
+    dialogElement.showModal()
+    const saveButton = document.getElementById('saveLoc');
 
-  const loc = {
-    name: locName,
-    rate: +prompt(`Rate (1-5)`, "3"),
-    geo,
-  };
+    document.querySelector('.close').addEventListener('click', () => {
+        dialogElement.close();
+    });
+
+    saveButton.onclick = () => {
+        const locName = document.getElementById('locNameInput').value
+        const locRate = document.getElementById('locRateInput').value
+
+        dialogElement.close()
+        
+        onSave({
+            name: locName,
+            rate: locRate
+        })
+    }
+
+    
+}
+
+
+// prompt("Loc name", geo.address || "Just a place");
+function onAddLoc(geo) {
+   dialog("Loc name", geo.address || "Just a place",(formData) => {
+    if (!formData.name) return
+    
+    const loc = {
+        name: formData.name,
+        rate: +formData.rate,
+        geo,
+    }
   locService
     .save(loc)
     .then((savedLoc) => {
@@ -143,7 +176,8 @@ function onAddLoc(geo) {
     .catch((err) => {
       console.error("OOPs:", err);
       flashMsg("Cannot add location");
-    });
+    })
+  })
 }
 
 function loadAndRenderLocs() {
@@ -174,9 +208,10 @@ function onPanToUserPos() {
 
 function onUpdateLoc(locId) {
   locService.getById(locId).then((loc) => {
-    const rate = prompt("New rate?", loc.rate);
-    if (rate !== loc.rate) {
-      loc.rate = rate;
+    dialog(loc.address,"New rate?", loc.rate,(formData) => {
+     const newRate = +formData.rate;
+     if (newRate !== loc.rate){ 
+      loc.rate = newRate;
       locService
         .save(loc)
         .then((savedLoc) => {
@@ -186,8 +221,10 @@ function onUpdateLoc(locId) {
         .catch((err) => {
           console.error("OOPs:", err);
           flashMsg("Cannot update location");
+      
         });
     }
+    })
   });
 }
 
@@ -296,6 +333,11 @@ function onSetFilterBy({ txt, minRate, createdAt }) {
 function renderLocStats() {
   locService.getLocCountByRateMap().then((stats) => {
     handleStats(stats, "loc-stats-rate");
+  });
+}
+function renderLocStatsUpate() {
+  locService.getLocCountByUpdate().then((stats) => {
+    handleStats(stats, "loc-stats-update");
   });
 }
 

@@ -14,13 +14,13 @@ import { storageService } from "./async-storage.service.js";
 //     createdAt: 1706562160181,
 //     updatedAt: 1706562160181
 // }
-
+const today = Date.now() - 1000*60*60*24
+console.log(today);
 const PAGE_SIZE = 5;
 const DB_KEY = "locs";
 var gSortBy = {};
 var gFilterBy = { txt: "", minRate: 0 };
 var gPageIdx;
-
 _createLocs();
 
 export const locService = {
@@ -31,6 +31,7 @@ export const locService = {
   setFilterBy,
   setSortBy,
   getLocCountByRateMap,
+  getLocCountByUpdate,
 };
 
 function query() {
@@ -99,6 +100,21 @@ function getLocCountByRateMap() {
         return map;
       },
       { high: 0, medium: 0, low: 0 }
+    );
+    locCountByRateMap.total = locs.length;
+    return locCountByRateMap;
+  });
+}
+function getLocCountByUpdate() {
+  return storageService.query(DB_KEY).then((locs) => {
+    const locCountByRateMap = locs.reduce(
+      (map, loc) => {
+        if (loc.updatedAt > today) map.Today++;
+        else if (loc.updatedAt <today) map.Past++;
+        else map.Never++;
+        return map;
+      },
+      { Today: 0, Past: 0, Never: 0 }
     );
     locCountByRateMap.total = locs.length;
     return locCountByRateMap;

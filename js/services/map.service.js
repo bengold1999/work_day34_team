@@ -65,6 +65,7 @@ function addClickListener(cb) {
         const geo = { lat: mapsMouseEvent.latLng.lat(), lng: mapsMouseEvent.latLng.lng() }
         lookupAddressGeo(geo).then(cb)
     })
+    
 }
 
 function setMarker(loc) {

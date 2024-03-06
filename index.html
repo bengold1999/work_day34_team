@@ -84,10 +84,22 @@
               <h4>By rate:</h4>
               <div class="pie"></div>
               <ul class="legend"></ul>
+              <div class="loc-stats-update">
+                <h4>By update:</h4>
+                <div class="pie"></div>
+                <ul class="legend"></ul>
             </div>
           </section>
         </section>
       </div>
+      <dialog class="dialog">
+        <h2 class="loc-name"></h2>
+        <p class="user-place"></p>
+        <input type="text" id="locNameInput" placeholder="Location Name">
+        <input type="number" id="locRateInput" placeholder="Rate (1-5)" value="3">
+        <button class="close">Close</button>
+        <button id="saveLoc">Save</button>
+    </dialog>
     </main>
     <pre class="debug" hidden></pre>
     <div class="user-msg"></div>

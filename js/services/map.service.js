@@ -8,6 +8,7 @@ export const mapService = {
     addClickListener
 }
 
+const israel = 12
 // TODO: Enter your API Key
 const API_KEY = ''
 var gMap

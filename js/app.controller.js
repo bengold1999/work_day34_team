@@ -3,7 +3,6 @@ import { locService } from "./services/loc.service.js";
 import { mapService } from "./services/map.service.js";
 
 window.onload = onInit;
-window.gUserPos = gUserPos;
 // To make things easier in this project structure
 // functions that are called from DOM are defined on a global app object
 window.app = {
@@ -16,7 +15,6 @@ window.app = {
   onShareLoc,
   onSetSortBy,
   onSetFilterBy,
-  
 };
 
 var gUserPos = null;
@@ -38,13 +36,13 @@ function onInit() {
 
 function renderLocs(locs) {
   const selectedLocId = getLocIdFromQueryParams();
-    
+
   var strHTML = locs
     .map((loc) => {
-        // const distance = utilService.getDistance(gUserPos,loc.geo,'k')
+      // const distance = utilService.getDistance(gUserPos,loc.geo,'k')
       const className = loc.id === selectedLocId ? "active" : "";
 
-        var distance = "";
+      var distance = "";
       if (gUserPos) {
         distance = utilService.getDistance(
           gUserPos,
@@ -126,63 +124,56 @@ function onSearchAddress(ev) {
       flashMsg("Cannot lookup address");
     });
 }
+
 function dialog(location, address, rate = 3, onSave) {
-  
-    document.querySelector('.loc-name').innerHTML = location;
-    document.querySelector('.user-place').innerHTML = address;
-    document.getElementById('locRateInput').value = rate; 
-    
-  
-    const dialogElement = document.querySelector('.dialog');
-    const saveButton = document.getElementById('saveLoc');
-    
-   
-    dialogElement.showModal();
-    
-  
-    document.querySelector('.close').addEventListener('click', () => {
-        dialogElement.close();
+  document.querySelector(".loc-name").innerHTML = location;
+  document.querySelector(".user-place").innerHTML = address;
+  document.getElementById("locRateInput").value = rate;
+
+  const dialogElement = document.querySelector(".dialog");
+  const saveButton = document.getElementById("saveLoc");
+
+  dialogElement.showModal();
+
+  document.querySelector(".close").addEventListener("click", () => {
+    dialogElement.close();
+  });
+
+  saveButton.onclick = () => {
+    const locName = document.getElementById("locNameInput").value;
+    const locRate = document.getElementById("locRateInput").value;
+
+    dialogElement.close();
+
+    onSave({
+      name: locName,
+      rate: locRate,
     });
-
-
-    saveButton.onclick = () => {
-
-        const locName = document.getElementById('locNameInput').value;
-        const locRate = document.getElementById('locRateInput').value;
-        
-
-        dialogElement.close();
-        
-  
-        onSave({
-            name: locName,
-            rate: locRate
-        });
-    };
+  };
 }
 
 function onAddLoc(geo) {
-    dialog("New Location", geo.address || "Just a place", 3, (formData) => {
-     if (!formData.name) return;
- 
-     const loc = {
-         name: formData.name,
-         rate: +formData.rate,
-         geo,
-     };
-     locService
-       .save(loc)
-       .then((savedLoc) => {
-         flashMsg(`Location added (id: ${savedLoc.id})`);
-         utilService.updateQueryParams({ locId: savedLoc.id });
-         loadAndRenderLocs();
-       })
-       .catch((err) => {
-         console.error("Oops:", err);
-         flashMsg("Cannot add location");
-       });
-   });
- }
+  dialog("New Location", geo.address || "Just a place", 3, (formData) => {
+    if (!formData.name) return;
+
+    const loc = {
+      name: formData.name,
+      rate: +formData.rate,
+      geo,
+    };
+    locService
+      .save(loc)
+      .then((savedLoc) => {
+        flashMsg(`Location added (id: ${savedLoc.id})`);
+        utilService.updateQueryParams({ locId: savedLoc.id });
+        loadAndRenderLocs();
+      })
+      .catch((err) => {
+        console.error("Oops:", err);
+        flashMsg("Cannot add location");
+      });
+  });
+}
 
 function loadAndRenderLocs() {
   locService
@@ -211,26 +202,25 @@ function onPanToUserPos() {
 }
 
 function onUpdateLoc(locId) {
-    locService.getById(locId).then((loc) => {
-      dialog(loc.name, loc.address, loc.rate, (formData) => {
-        const newRate = +formData.rate;
-        if (newRate !== loc.rate) { 
-          loc.rate = newRate;
-          locService
-            .save(loc)
-            .then((savedLoc) => {
-              flashMsg(`Rate was updated to: ${savedLoc.rate}`);
-              loadAndRenderLocs();
-            })
-            .catch((err) => {
-              console.error("Oops:", err);
-              flashMsg("Cannot update location");
-            });
-        }
-      });
+  locService.getById(locId).then((loc) => {
+    dialog(loc.name, loc.address, loc.rate, (formData) => {
+      const newRate = +formData.rate;
+      if (newRate !== loc.rate) {
+        loc.rate = newRate;
+        locService
+          .save(loc)
+          .then((savedLoc) => {
+            flashMsg(`Rate was updated to: ${savedLoc.rate}`);
+            loadAndRenderLocs();
+          })
+          .catch((err) => {
+            console.error("Oops:", err);
+            flashMsg("Cannot update location");
+          });
+      }
     });
-  }
-
+  });
+}
 
 function onSelectLoc(locId) {
   return locService
@@ -339,6 +329,7 @@ function renderLocStats() {
     handleStats(stats, "loc-stats-rate");
   });
 }
+
 function renderLocStatsUpate() {
   locService.getLocCountByUpdate().then((stats) => {
     handleStats(stats, "loc-stats-update");

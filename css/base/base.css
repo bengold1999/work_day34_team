@@ -57,3 +57,28 @@ button:active {
 .smaller {
   font-size: 0.8em;
 }
+
+/*dialog*/
+
+.user-place {
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.close,
+.savedLoc {
+  background-color: var(--color3);
+  color: black;
+}
+
+.location-input,
+.rate-input {
+  border: 1px solid black;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.dialog {
+  background-color: var(--bg1);
+}

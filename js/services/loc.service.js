@@ -14,7 +14,7 @@ import { storageService } from "./async-storage.service.js";
 //     createdAt: 1706562160181,
 //     updatedAt: 1706562160181
 // }
-const today = Date.now() - 1000*60*60*24
+const today = Date.now() - 1000 * 60 * 60 * 24;
 console.log(today);
 const PAGE_SIZE = 5;
 const DB_KEY = "locs";
@@ -105,12 +105,13 @@ function getLocCountByRateMap() {
     return locCountByRateMap;
   });
 }
+
 function getLocCountByUpdate() {
   return storageService.query(DB_KEY).then((locs) => {
     const locCountByRateMap = locs.reduce(
       (map, loc) => {
         if (loc.updatedAt > today) map.Today++;
-        else if (loc.updatedAt <today) map.Past++;
+        else if (loc.updatedAt < today) map.Past++;
         else map.Never++;
         return map;
       },
